@@ -1,84 +1,43 @@
-// Loon 插件脚本
 /*
 Loon专用
 2024-12-27
-支持多种 GitHub URL 类型的镜像改写
 */
+let githubPrefix = "https://github.com/"
+let rawGithubPrefix = "https://raw.githubusercontent.com/"
 
-// 检查脚本类型是否为 http-request
-if (typeof $request === "undefined") {
-  console.log("错误：未检测到 $request。请确保脚本类型为 http-request");
-  $done({});
-}
+// 镜像源定义
+let ghpciPrefix = "https://ghp.ci/" // 代号A镜像
+let lamcheyPrefix = "https://ghp.lamchey.xyz/" // 由 @lamchey 提供，代号B镜像
 
-// 定义镜像地址
-const mirrorPrefixes = {
-  "A镜像": "https://ghp.lamchey.xyz/",
-  "B镜像": "https://ghp.ci/",
-  "C镜像": "https://fastraw.ixnic.net/",
-  "D镜像": "https://hub.incept.pw/"
-};
+// 获取用户选择的镜像源
+let changeTo = $persistentStore.read("镜像源")
 
-// 获取用户选择的镜像源，若未选择，则默认为 A 镜像
-const selectedMirror = $persistentStore.read("镜像源");
-const mirrorPrefix = mirrorPrefixes[selectedMirror] || mirrorPrefixes["A镜像"];
+var url = $request.url
+var headers = $request.headers
 
-// 定义 GitHub URL 类型的正则表达式列表
-const githubRegexList = [
-  {
-    regex: /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:releases|archive)\/.*$/i
-  },
-  {
-    regex: /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:blob|raw)\/.*$/i
-  },
-  {
-    regex: /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:info|git-).*$/i
-  },
-  {
-    regex: /^(?:https?:\/\/)?raw\.(?:githubusercontent|github)\.com\/.+?\/.+?\/.+?\/.+$/i
-  },
-  {
-    regex: /^(?:https?:\/\/)?gist\.(?:githubusercontent|github)\.com\/.+?\/.+?\/.+$/i
-  },
-  {
-    regex: /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/tags.*$/i
-  }
-];
+// 删除原有的 host，避免干扰
+delete headers.host
+delete headers.Host
 
-// 当前请求的 URL 和请求头
-let url = $request.url;
-let headers = $request.headers;
-
-// 删除 `host`，确保后续改写正确
-delete headers.host;
-delete headers.Host;
-
-// 输出原始 URL
-console.log("原始 URL:", url);
-
-// 循环检查每种 URL 类型并进行改写
-for (let i = 0; i < githubRegexList.length; i++) {
-  const { regex } = githubRegexList[i];
-
-  if (regex.test(url)) {
-    // 替换 URL，添加镜像前缀
-    if (url.startsWith("https://raw.githubusercontent.com/")) {
-      url = url.replace("https://raw.githubusercontent.com/", `${mirrorPrefix}https://raw.githubusercontent.com/`);
-    } else if (url.startsWith("https://github.com/")) {
-      url = url.replace("https://github.com/", `${mirrorPrefix}github.com/`);
-    } else {
-      // 默认处理其他 URL 类型
-      url = url.replace(regex, (match) => {
-        return match.replace(/^https?:\/\/(?:raw\.)?github\.com/, mirrorPrefix + "github.com");
-      });
+// 检查是否为 GitHub 相关的 URL
+if (url.startsWith(githubPrefix)) {
+    if (changeTo == "") {
+        headers["host"] = new URL(ghpciPrefix).host
+        url = url.replace(githubPrefix, ghpciPrefix)
+    } else if (changeTo == "B镜像") {
+        headers["host"] = new URL(lamcheyPrefix).host
+        url = url.replace(githubPrefix, lamcheyPrefix)
+    } 
+} else if (url.startsWith(rawGithubPrefix)) {
+    // 针对 raw.githubusercontent.com URL 的改写
+    if (changeTo == "") {
+        headers["host"] = new URL(ghpciPrefix).host
+        url = url.replace(rawGithubPrefix, ghpciPrefix)
+    } else if (changeTo == "B镜像") {
+        headers["host"] = new URL(lamcheyPrefix).host
+        url = url.replace(rawGithubPrefix, lamcheyPrefix)
     }
-    headers["host"] = new URL(mirrorPrefix).host; // 设置新的 host 头
-    break; // 找到第一个匹配的 URL 后跳出循环
-  }
-}
+} 
 
-// 输出修改后的 URL
-console.log("修改后的 URL:", url);
-
-// 返回修改后的 URL 和请求头
-$done({ url: url, headers: headers });
+// 返回修改后的 URL 和 headers
+$done({url: url, headers: headers});
