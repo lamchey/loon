@@ -30,7 +30,7 @@ if (changeTo == "") {
     headers["host"] = "ghgo.xyz"
     url = C_Prefix + url
 } else if (changeTo == "D镜像") {
-    headers["host"] = "ghp.lamchey.xyz"
+    headers["host"] = "lamchey.xyz"
     url = D_Prefix + url
 }
 
