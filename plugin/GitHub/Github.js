@@ -2,7 +2,6 @@
 Loon专用
 2024-12-27
 */
-let githubPrefix = "https://github.com/"
 let rawGithubPrefix = "https://raw.githubusercontent.com/"
 
 // 镜像源定义
@@ -19,16 +18,8 @@ var headers = $request.headers
 delete headers.host
 delete headers.Host
 
-// 检查是否为 GitHub 相关的 URL
-if (url.startsWith(githubPrefix)) {
-    if (changeTo == "") {
-        headers["host"] = new URL(ghpciPrefix).host
-        url = ghpciPrefix + url // 拼接前缀
-    } else if (changeTo == "B镜像") {
-        headers["host"] = new URL(lamcheyPrefix).host
-        url = lamcheyPrefix + url
-    } 
-} else if (url.startsWith(rawGithubPrefix)) {
+// 检查是否为 GitHub raw URL
+ if (url.startsWith(rawGithubPrefix)) {
     // 针对 raw.githubusercontent.com URL 的改写
     if (changeTo == "") {
         headers["host"] = new URL(ghpciPrefix).host
