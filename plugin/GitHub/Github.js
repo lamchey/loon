@@ -1,37 +1,30 @@
-/*
-Loon专用
-2024-12-27
-*/
-let rawGithubPrefix = "https://raw.githubusercontent.com/"
-
 // 镜像源定义
-let APrefix = "https://ghp.ci/" // 代号A镜像
-let BPrefix = "https://ghp.lamchey.xyz/" // 由 @lamchey 提供，代号B镜像
+const mirrorPrefixes = {
+  A镜像: "https://ghp.ci/",
+  B镜像: "https://ghp.lamchey.xyz/"
+};
 
-// 获取用户选择的镜像源
-let changeTo = $persistentStore.read("镜像源")
+// 读取用户选择的镜像源
+const selectedMirror = $persistentStore.read("镜像源") || "A镜像"; // 默认使用 A 镜像
 
-var url = $request.url
-var headers = $request.headers
+// 当前请求的 URL
+let url = $request.url;
 
-// 删除原有的 host，避免干扰
-delete headers.host
-delete headers.Host
+// 获取镜像前缀
+const mirrorPrefix = mirrorPrefixes[selectedMirror] || mirrorPrefixes["A镜像"];
 
-// 检查是否为 GitHub raw URL
- if (url.startsWith(rawGithubPrefix)) {
-    if (changeTo == "") {
-        headers["host"] = new URL(APrefix).host
-        url = APrefix + url // 拼接前缀
-    } else if (changeTo == "A镜像") {
-        headers["host"] = new URL(APrefix).host
-        url = APrefix + url
-    }else if (changeTo == "B镜像") {
-        headers["host"] = new URL(BPrefix).host
-        url = BPrefix + url
-    }
-  
-} 
+// 检查并重写 URL
+if (mirrorPrefix) {
+  url = `${mirrorPrefix}${url}`;
+}
 
-// 返回修改后的 URL 和 headers
-$done({url: url, headers: headers});
+// 删除原有的 Host 头，防止干扰
+let headers = $request.headers;
+delete headers.host;
+delete headers.Host;
+
+// 设置新的 Host 头
+headers["host"] = new URL(mirrorPrefix).host;
+
+// 返回修改后的请求
+$done({ url: url, headers: headers });
