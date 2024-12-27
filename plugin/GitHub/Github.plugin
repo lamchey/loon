@@ -6,4 +6,8 @@
 #!select=镜像源,A镜像,B镜像,C镜像,D镜像
 
 [script]
-http-request ^* script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
+http-request ^https:\/\/raw\.githubusercontent\.com\/  script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
+http-request ^https:\/\/raw\.github\.com\/  script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
+http-request ^https:\/\/github\.com\/  script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
+http-request ^https:\/\/gist\.github\.com\/  script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
+http-request ^https:\/\/gist\.githubusercontent\.com\/  script-path=https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/GitHub/Github.js,tag = GitHub 加速,enable=true
