@@ -3,7 +3,7 @@
 #!author= lamchey
 #!homepage= https://github.com/lamchey/loon
 #!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/GitHub.png
-#!select=镜像源,A镜像,B镜像
+#!select=镜像源,A镜像,B镜像,C镜像,D镜像
 
 [rule]
 DOMAIN-SUFFIX,ghp.ci,DIRECT
