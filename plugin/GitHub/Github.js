@@ -1,45 +1,34 @@
-// 镜像源定义
-const mirrorPrefixes = {
-  A镜像: "https://fastraw.ixnic.net/",  // FastGit 镜像
-  B镜像: "https://hub.incept.pw/",      // Hub 镜像
-  C镜像: "https://ghp.ci/",             // GHP 镜像
-  D镜像: "https://ghp.lamchey.xyz/"     // Lamchey 镜像
-};
+/*
+Loon专用
+2024-12-27
+*/
+let githubPrefix = "https://raw.githubusercontent.com/"
+let fastrawPrefix = "https://fastraw.ixnic.net/" //由FastGit群组成员 @duya1234567 提供，代号A镜像。
+let hubinceptPrefix = "https://hub.incept.pw/" // 由FastGit群组成员 @mxe365 提供，代号B镜像。
+// let kkgithubPrefix = "https://raw.kkgithub.com/" //由KGithub提供，暂时失效。
 
-// GitHub 原始 URL 前缀
-const githubPrefix = "https://raw.githubusercontent.com/";
+//1: fastraw.ixnic.net 2.hub.incept.pw 3.raw.kkgithub.com
+let changeTo = $persistentStore.read("镜像源")
 
-// 获取用户选择的镜像源
-const selectedMirror = $persistentStore.read("镜像源") || "A镜像"; // 默认使用 A 镜像
+var url = $request.url
+var headers = $request.headers
+delete headers.host
+delete headers.Host
 
-// 当前请求的 URL 和头部
-let url = $request.url;
-let headers = $request.headers;
-
-// 删除原有的 Host 头，避免干扰
-delete headers.host;
-delete headers.Host;
-
-// 检查是否是目标 URL
 if (!url.startsWith(githubPrefix)) {
-  $done({}); // 如果不是 GitHub 原始链接，直接返回
-  return;
+    $done({});
+    return;
 }
 
-// 获取镜像前缀
-const mirrorPrefix = mirrorPrefixes[selectedMirror] || mirrorPrefixes["A镜像"];
-
-// 改写 URL 和 Host 头
-if (selectedMirror === "C镜像" || selectedMirror === "D镜像") {
-  // 对于 ghp.ci 和 lamchey 镜像，拼接完整 URL
-  url = `${mirrorPrefix}${url}`;
-} else {
-  // 对于其他镜像，直接替换原始前缀
-  url = url.replace(githubPrefix, mirrorPrefix);
+if (changeTo == "") {
+    headers["host"] = "A镜像"
+    url = url.replace(githubPrefix,fastrawPrefix)
+} else if (changeTo == "B镜像") {
+    headers["host"] = "hub.incept.pw"
+    url = url.replace(githubPrefix,hubinceptPrefix)
+} else if (changeTo == "C镜像") {
+    headers["host"] = "raw.kkgithub.com"
+    url = url.replace(githubPrefix,kkgithubPrefix)
 }
 
-// 设置新的 Host
-headers["host"] = new URL(mirrorPrefix).host;
-
-// 返回修改后的请求
-$done({ url: url, headers: headers });
+$done({url:url,headers:headers})
