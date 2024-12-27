@@ -9,7 +9,7 @@ const mirrorPrefixes = {
   "A镜像": "https://ghp.lamchey.xyz/",
   "B镜像": "https://ghp.ci/",
   "C镜像": "https://fastraw.ixnic.net/"
-  "D镜像": https://hub.incept.pw/
+  "D镜像": "https://hub.incept.pw/"
 };
 
 // 获取用户选择的镜像源，若未选择，则默认为 A 镜像
