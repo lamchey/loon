@@ -23,19 +23,19 @@ delete headers.Host
 if (url.startsWith(githubPrefix)) {
     if (changeTo == "") {
         headers["host"] = new URL(ghpciPrefix).host
-        url = url.replace(githubPrefix, ghpciPrefix)
+        url = ghpciPrefix + url // 拼接前缀
     } else if (changeTo == "B镜像") {
         headers["host"] = new URL(lamcheyPrefix).host
-        url = url.replace(githubPrefix, lamcheyPrefix)
+        url = lamcheyPrefix + url
     } 
 } else if (url.startsWith(rawGithubPrefix)) {
     // 针对 raw.githubusercontent.com URL 的改写
     if (changeTo == "") {
         headers["host"] = new URL(ghpciPrefix).host
-        url = url.replace(rawGithubPrefix, ghpciPrefix)
+        url = ghpciPrefix + url // 拼接前缀
     } else if (changeTo == "B镜像") {
         headers["host"] = new URL(lamcheyPrefix).host
-        url = url.replace(rawGithubPrefix, lamcheyPrefix)
+        url = lamcheyPrefix + url
     }
 } 
 
