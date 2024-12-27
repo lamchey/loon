@@ -25,7 +25,7 @@ delete headers.Host
         headers["host"] = new URL(ghpciPrefix).host
         url = ghpciPrefix + url // 拼接前缀
     } else if (changeTo == "A镜像") {
-        headers["host"] = new URL(lamcheyPrefix).host
+        headers["host"] = new URL(ghpciPrefix).host
         url = ghpciPrefix + url
     }else if (changeTo == "B镜像") {
         headers["host"] = new URL(lamcheyPrefix).host
