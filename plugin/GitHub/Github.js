@@ -8,17 +8,17 @@ Loon专用
 const mirrorPrefixes = {
   "A镜像": "https://ghp.lamchey.xyz/",
   "B镜像": "https://ghp.ci/",
-  "C镜像": "https://fastraw.ixnic.net/"
+  "C镜像": "https://fastraw.ixnic.net/",
   "D镜像": "https://hub.incept.pw/"
 };
 
 // 获取用户选择的镜像源，若未选择，则默认为 A 镜像
-const selectedMirror = $persistentStore.read("镜像源");
+const selectedMirror = $persistentStore.read("镜像源") || "A镜像";  // 默认使用 A 镜像
 
-// 如果用户选择了未知的镜像源，则自动使用 A 镜像
+// 获取镜像源的前缀，如果没有找到该镜像源则默认使用 A 镜像
 const mirrorPrefix = mirrorPrefixes[selectedMirror] || mirrorPrefixes["A镜像"];
 
-// 定义正则表达式列表
+// 定义正则表达式列表，用于匹配不同类型的 GitHub URL
 const githubRegexList = [
   {
     regex: /^(?:https?:\/\/)?github\.com\/.+?\/.+?\/(?:releases|archive)\/.*$/i
@@ -64,11 +64,11 @@ for (let i = 0; i < githubRegexList.length; i++) {
         return match.replace(/^https?:\/\/(?:raw\.)?github\.com/, mirrorPrefix + "github.com");
       });
     }
-    headers["host"] = new URL(mirrorPrefix).host; // 设置新的 host 头
-    break; // 找到第一个匹配的 URL 后跳出循环
+    // 设置新的 host 头
+    headers["host"] = new URL(mirrorPrefix).host;
+    break;  // 找到第一个匹配的 URL 后跳出循环
   }
 }
 
 // 返回修改后的 URL 和请求头
 $done({ url: url, headers: headers });
-
