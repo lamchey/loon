@@ -24,10 +24,14 @@ delete headers.Host
     if (changeTo == "") {
         headers["host"] = new URL(ghpciPrefix).host
         url = ghpciPrefix + url // 拼接前缀
-    } else if (changeTo == "B镜像") {
+    } else if (changeTo == "A镜像") {
+        headers["host"] = new URL(lamcheyPrefix).host
+        url = ghpciPrefix + url
+    }else if (changeTo == "B镜像") {
         headers["host"] = new URL(lamcheyPrefix).host
         url = lamcheyPrefix + url
     }
+  
 } 
 
 // 返回修改后的 URL 和 headers
