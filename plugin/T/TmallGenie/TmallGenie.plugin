@@ -3,7 +3,7 @@
 #!author = lamchey
 #!date = 2026-01-02
 #!homepage= https://github.com/lamchey/loon
-#!icon= 插件的图标
+#!icon= https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/T/TmallGenie/TmallGenie.WEBP
 #!tag = 去广告
 
 [Rewrite]
