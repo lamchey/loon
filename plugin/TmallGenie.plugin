@@ -1,0 +1,14 @@
+#!name = 天猫精灵去广告
+#!desc = 移除天猫精灵App的开屏广告及部分内置推广信息。
+#!author = lamchey
+#!date = 2026-01-02
+#!homepage= https://github.com/lamchey/loon
+#!icon= 插件的图标
+#!tag = 去广告
+
+[Rewrite]
+^https?:\/\/ossgw\.alicdn\.com\/creatives-assets\/image\/ reject-200
+^https?:\/\/zconfig\.alibabausercontent\.com\/zconfig reject
+
+[Mitm]
+hostname = ossgw.alicdn.com, zconfig.alibabausercontent.com
