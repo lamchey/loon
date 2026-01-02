@@ -1,0 +1,13 @@
+#!name = 京东去开屏广告
+#!desc = 移除京东App的开屏广告。
+#!author = lamchey
+#!date = 2026-01-02
+#!homepage= https://github.com/lamchey/loon
+#!icon= https://raw.githubusercontent.com/lamchey/loon/refs/heads/main/plugin/J/JD/JD.PNG
+#!tag = 去广告
+
+[Rewrite]
+^https?:\/\/m\.360buyimg\.com\/mobilecms\/s1125x2436_jfs reject-200
+
+[Mitm]
+hostname = m.360buyimg.com
